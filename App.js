@@ -1,13 +1,21 @@
 import { useState } from 'react';
-import { Alert, Switch, Text, TextInput, Button, View, ScrollView } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { Alert, Switch, Text, TextInput, ScrollView, View, Pressable } from 'react-native';
 import NumericInput from 'react-native-numeric-input';
 import RadioForm from 'react-native-simple-radio-button';
 import { DarkTheme, BrightTheme } from './MyStyles'
+// import { useFonts } from 'expo-font'
 
 export default function App() {
 
-  const [weight, setWeight] = useState(null)
+  // const [loaded] = useFonts({
+  //   PoppinsRegular: require('./assets/fonts/Poppins-Regular.ttf')
+  // })
+
+  // if (!loaded) {
+  //   return null;
+  // }
+
+  const [weight, setWeight] = useState(0)
   const [bottles, setBottles] = useState(0)
   const [time, setTime] = useState(0)
   const [gender, setGender] = useState('male')
@@ -21,9 +29,16 @@ export default function App() {
     //tai lambdana ()=>setFancy(prev => !prev)}
   }
 
+  function showAlert() {
+    Alert.alert('You must enter your weight first.')
+  }
+
   function calculateBloodAlcoholLevel() {
 
-    if (weight !== null) {
+    if ( weight == 0 || weight == null) {
+      showAlert()
+      return;
+    }
     let grams = (bottles * 0.33) * 8 * 4.5
     let burning = weight / 10
     let gramsLeft = grams - (burning * time)
@@ -35,62 +50,103 @@ export default function App() {
       result = gramsLeft / (weight * 0.6)
     }
 
-
     if (result < 0) {
       setResult(0);
     } else {
       setResult(result)
     }
-  } else {
-    console.log("input empty");
   }
-  
-}
+
+  // function getBackgroundColor(result) {
+  //   if (result <= 0.5) {
+  //     return '#4DA167';
+  //   }
+  //   if (result <= 1 ){
+  //     return '#FFC53A';
+  //   }
+  //   if (result > 2){
+  //     return '#C52233';
+  //   }
+  //   else {
+  //     return '#FFFFFF';
+  //   }
+  // }
 
 
-const genders = [
-  { label: 'Male', value: 'male' },
-  { label: 'Female', value: 'female' },
-]
+  const genders = [
+    { label: 'Male', value: 'male' },
+    { label: 'Female', value: 'female' },
+  ]
 
-return (
-  <ScrollView>
-    <Switch
-      // trackColor={{ false: "#767577", true: "#81b0ff" }}
-      // thumbColor={isD ? "#f5dd4b" : "#f4f3f4"}
-      onValueChange={changeTheme}
-      value={isDarkTheme}
-    />
-    <Text>Alcometer</Text>
-    <Text>Weight</Text>
-    <TextInput
-      name="weightInput"
-      onChangeText={weight => setWeight(weight)}
-      value={weight}
-      keyboardType="numeric"
-    />
-    <Text>Bottles</Text>
-    <NumericInput
-      minValue={0}
-      onChange={bottles => setBottles(bottles)}
-      keyboardType={'number-pad'}
-    />
-    <Text>Time</Text>
-    <NumericInput
-      minValue={0}
-      onChange={time => setTime(time)}
-      keyboardType={'number-pad'}
-    />
-    <RadioForm
-      radio_props={genders}
-      initial={'0'}
-      onPress={value => setGender(value)}
-    />
+  return (
+    <ScrollView contentContainerStyle={theme.container}>
+      <View style={theme.container}>
+        <View style={theme.switchContainer}>
+          <Switch
+            style={theme.switchContainer}
+            onValueChange={changeTheme}
+            value={isDarkTheme}
+          />
+          {isDarkTheme ? <Text style={theme.switchContainer}>Dark mode</Text> :
+            <Text style={theme.switchContainer}>Bright mode</Text>}
+        </View>
 
-    <Text style={theme.label}>{result.toFixed(2)}</Text>
+        <Text style={theme.header}>Alcometer</Text>
+        
+        <Text style={theme.label}>Weight</Text>
+        <TextInput
+          style={theme.textInput}
+          onChangeText={weight => setWeight(weight)}
+          value={weight}
+          keyboardType="numeric"
+        />
+        <Text style={theme.label}>Bottles</Text>
 
-    <Button title='CALCULATE' onPress={calculateBloodAlcoholLevel} />
-    <Button title='Change theme' onPress={changeTheme}></Button>
-  </ScrollView>
-);
+        <NumericInput
+          minValue={0}
+          onChange={bottles => setBottles(bottles)}
+          keyboardType={'number-pad'}
+          rightButtonBackgroundColor='#335C81'
+          leftButtonBackgroundColor='#CCDBDC'
+          rounded
+          textColor='#335C81'
+        />
+
+        <Text style={theme.label}>Time</Text>
+        <NumericInput
+          minValue={0}
+          onChange={time => setTime(time)}
+          keyboardType={'number-pad'}
+          rightButtonBackgroundColor='#335C81'
+          leftButtonBackgroundColor='#CCDBDC'
+          rounded
+          textColor='#335C81'
+          
+        />
+        <View style={{ marginRight: 50, marginVertical: 30 }}>
+          <RadioForm
+            style={theme.radioButtons}
+            radio_props={genders}
+            initial={0}
+            onPress={value => setGender(value)}
+            buttonColor={'#274060'}
+            selectedButtonColor={'#335C81'}
+            labelStyle={{ fontSize: 20, color: '#335C81' }}
+          ></RadioForm>
+        </View>
+        {result > 0 && result <= 0.5 ? <Text style={theme.resultLow}>{result.toFixed(2)}</Text>
+          : result > 0 && result <= 1 ? <Text style={theme.resultMed}>{result.toFixed(2)}</Text>
+            : result > 0 && result > 1 ? <Text style={theme.resultHigh}>{result.toFixed(2)}</Text>
+              : <Text></Text>
+        }
+        <Pressable
+          style={theme.button}
+          onPress={calculateBloodAlcoholLevel}>
+          <Text style={theme.button}>
+            Calculate
+          </Text>
+        </Pressable>
+      </View>
+    </ScrollView>
+  );
 }
