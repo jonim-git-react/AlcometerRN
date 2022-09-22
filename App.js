@@ -1,19 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useFonts } from 'expo-font'
 import { Alert, Switch, Text, TextInput, ScrollView, View, Pressable } from 'react-native';
 import NumericInput from 'react-native-numeric-input';
 import RadioForm from 'react-native-simple-radio-button';
-import { DarkTheme, BrightTheme } from './MyStyles'
-// import { useFonts } from 'expo-font'
-
+import { DarkTheme, BrightTheme } from './assets/styles/MyStyles'
 export default function App() {
-
-  // const [loaded] = useFonts({
-  //   PoppinsRegular: require('./assets/fonts/Poppins-Regular.ttf')
-  // })
-
-  // if (!loaded) {
-  //   return null;
-  // }
 
   const [weight, setWeight] = useState(0)
   const [bottles, setBottles] = useState(0)
@@ -21,6 +12,14 @@ export default function App() {
   const [gender, setGender] = useState('male')
   const [result, setResult] = useState(0)
   const [isDarkTheme, setIsDarkTheme] = useState(false)
+
+  const [loaded] = useFonts({
+    PoppinsRegular: require('./assets/fonts/Poppins-Regular.ttf'),
+  })
+
+  if (!loaded) {
+   return null;
+ }
 
   const theme = isDarkTheme ? DarkTheme : BrightTheme;
 
@@ -34,11 +33,11 @@ export default function App() {
   }
 
   function calculateBloodAlcoholLevel() {
-
-    if ( weight == 0 || weight == null) {
+    if (weight == 0 || weight == null) {
       showAlert()
       return;
     }
+
     let grams = (bottles * 0.33) * 8 * 4.5
     let burning = weight / 10
     let gramsLeft = grams - (burning * time)
@@ -56,28 +55,11 @@ export default function App() {
       setResult(result)
     }
   }
-
-  // function getBackgroundColor(result) {
-  //   if (result <= 0.5) {
-  //     return '#4DA167';
-  //   }
-  //   if (result <= 1 ){
-  //     return '#FFC53A';
-  //   }
-  //   if (result > 2){
-  //     return '#C52233';
-  //   }
-  //   else {
-  //     return '#FFFFFF';
-  //   }
-  // }
-
-
+  
   const genders = [
     { label: 'Male', value: 'male' },
     { label: 'Female', value: 'female' },
   ]
-
   return (
     <ScrollView contentContainerStyle={theme.container}>
       <View style={theme.container}>
@@ -90,9 +72,7 @@ export default function App() {
           {isDarkTheme ? <Text style={theme.switchContainer}>Dark mode</Text> :
             <Text style={theme.switchContainer}>Bright mode</Text>}
         </View>
-
         <Text style={theme.header}>Alcometer</Text>
-        
         <Text style={theme.label}>Weight</Text>
         <TextInput
           style={theme.textInput}
@@ -101,7 +81,6 @@ export default function App() {
           keyboardType="numeric"
         />
         <Text style={theme.label}>Bottles</Text>
-
         <NumericInput
           minValue={0}
           onChange={bottles => setBottles(bottles)}
@@ -111,7 +90,6 @@ export default function App() {
           rounded
           textColor='#335C81'
         />
-
         <Text style={theme.label}>Time</Text>
         <NumericInput
           minValue={0}
@@ -121,7 +99,6 @@ export default function App() {
           leftButtonBackgroundColor='#CCDBDC'
           rounded
           textColor='#335C81'
-          
         />
         <View style={{ marginRight: 50, marginVertical: 30 }}>
           <RadioForm
