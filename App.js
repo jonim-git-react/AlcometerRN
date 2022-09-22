@@ -12,20 +12,18 @@ export default function App() {
   const [gender, setGender] = useState('male')
   const [result, setResult] = useState(0)
   const [isDarkTheme, setIsDarkTheme] = useState(false)
+  const theme = isDarkTheme ? DarkTheme : BrightTheme;
 
   const [loaded] = useFonts({
     PoppinsRegular: require('./assets/fonts/Poppins-Regular.ttf'),
   })
 
   if (!loaded) {
-   return null;
- }
-
-  const theme = isDarkTheme ? DarkTheme : BrightTheme;
+    return null;
+  }
 
   function changeTheme() {
     setIsDarkTheme(prev => !prev)
-    //tai lambdana ()=>setFancy(prev => !prev)}
   }
 
   function showAlert() {
@@ -55,7 +53,7 @@ export default function App() {
       setResult(result)
     }
   }
-  
+
   const genders = [
     { label: 'Male', value: 'male' },
     { label: 'Female', value: 'female' },
@@ -114,7 +112,7 @@ export default function App() {
         {result > 0 && result <= 0.5 ? <Text style={theme.resultLow}>{result.toFixed(2)}</Text>
           : result > 0 && result <= 1 ? <Text style={theme.resultMed}>{result.toFixed(2)}</Text>
             : result > 0 && result > 1 ? <Text style={theme.resultHigh}>{result.toFixed(2)}</Text>
-              : <Text></Text>
+              : <Text style={theme.result}>{result.toFixed(2)}</Text>
         }
         <Pressable
           style={theme.button}

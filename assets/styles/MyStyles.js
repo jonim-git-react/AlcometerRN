@@ -11,6 +11,7 @@ export const BrightTheme = StyleSheet.create({
     flexDirection: 'row',
     textAlignVertical: "center",
     padding: 5,
+    fontFamily: 'PoppinsRegular'
   },
   header: {
     fontFamily: 'PoppinsRegular',
@@ -81,18 +82,17 @@ export const BrightTheme = StyleSheet.create({
     minWidth: 100,
     marginLeft: 5,
     fontSize: 30,
+    fontFamily: 'PoppinsRegular',
     textAlign: 'center',
     borderBottomColor: 'black',
     borderBottomWidth: 1
   },
   button: {
     alignSelf: 'center',
-    borderColor: 'white',
-    borderStyle: "solid",
     borderRadius: 30,
-    borderWidth: 2,
     padding: 1,
     margin: 20,
+    fontFamily: 'PoppinsRegular',
     backgroundColor: '#CCDBDC',
     fontWeight: "bold",
     fontSize: 30,
@@ -121,9 +121,6 @@ export const DarkTheme = StyleSheet.create({
   textInput: {
     ...BrightTheme.textInput,
     backgroundColor:'blue'
-  },
-  resultLow: {
-    ...BrightTheme.resultLow
   },
   button: {
     ...BrightTheme.button
